@@ -1,5 +1,6 @@
-/01_Unity/Library
-/01_Unity/Temp	
+Library/
+Temp/
+obj/
 
 *.swp
 *.csproj
