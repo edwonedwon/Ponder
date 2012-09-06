@@ -1,0 +1,8 @@
+/01_Unity/Library
+/01_Unity/Temp	
+
+*.swp
+*.csproj
+*.pidb
+*.sln
+*.userprefs
