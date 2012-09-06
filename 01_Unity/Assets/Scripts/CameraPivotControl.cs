@@ -4,6 +4,9 @@ using System.Collections;
 public class CameraPivotControl : MonoBehaviour {
 	
 	public float rotateSpeed; 
+	public float zoomSpeed;
+	public float minZoom;
+	public float maxZoom;
 	
 	private Vector3 defaultCameraPosition;
 	private Transform cameraTransform;
@@ -18,8 +21,13 @@ public class CameraPivotControl : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-		transform.Rotate(Vector3.up, Input.GetAxis("Horizontal")*rotateSpeed, Space.World);
-		cameraTransform.Translate(Vector3.forward * Input.GetAxis("Vertical"));
+		transform.Rotate(Vector3.up, Input.GetAxis("Horizontal") * rotateSpeed, Space.World);
+		
+		float zoomMagnitude = cameraTransform.position.magnitude;
+		float zoomAxis = Input.GetAxis("Vertical");
+		if((zoomMagnitude >= minZoom || zoomAxis < 0) &&
+			(zoomMagnitude <= maxZoom || zoomAxis > 0))
+			cameraTransform.Translate(0, 0, zoomAxis * zoomSpeed);
 		
 		if(Input.GetButtonDown("Jump")) {
 			transform.rotation = defaultCameraRotation;
