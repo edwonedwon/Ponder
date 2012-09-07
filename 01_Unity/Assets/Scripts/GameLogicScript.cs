@@ -15,10 +15,9 @@ public class GameLogicScript : MonoBehaviour {
 	
 		for (int i = 0; i < startInsects; i++) {
 			Vector3 spawnPoint = new Vector3 (
-				Random.Range(treeLeavesPos.x - randPosRange, treeLeavesPos.x + randPosRange), 
-				Random.Range(treeLeavesPos.y - randPosRange, treeLeavesPos.y + randPosRange),
-				Random.Range(treeLeavesPos.z - randPosRange, treeLeavesPos.z + randPosRange)
-			);
+				treeLeavesPos.x + Random.Range(-randPosRange, randPosRange), 
+				treeLeavesPos.y + Random.Range(-randPosRange, randPosRange),
+				treeLeavesPos.z + Random.Range(-randPosRange, randPosRange));
 			Instantiate(insect, spawnPoint, Quaternion.identity); 
 		}
 	}
