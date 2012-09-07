@@ -10,6 +10,7 @@ public class GameLogicScript : MonoBehaviour {
 	public int startInsects;
 	public int randPosRange;
 	private GameObject mainTreeLeaves;
+	private MainTreeLeavesScript treeScript;
 	
 	private List<GameObject> plantList;
 	
@@ -20,6 +21,7 @@ public class GameLogicScript : MonoBehaviour {
 	void Start () {
 		plantList = new List<GameObject>();
 		mainTreeLeaves = GameObject.Find("Main Tree Leaves");
+		treeScript = mainTreeLeaves.GetComponent<MainTreeLeavesScript>();
 		Vector3 treeLeavesPos = mainTreeLeaves.transform.position;
 	
 		for (int i = 0; i < startInsects; i++) {
@@ -42,12 +44,19 @@ public class GameLogicScript : MonoBehaviour {
 		else if(Input.GetKeyDown(KeyCode.RightBracket)) {
 			AddInsect(mainTreeLeaves.transform.position);
 		}
+		
+		if(Input.GetKeyDown(KeyCode.Alpha1)) 
+			treeScript.pollen += 100;
 	}
 	
 	public GameObject AddPlant(Vector3 position) {
-		var plant = Instantiate(circlePlant, position, Quaternion.identity) as GameObject;
-		plantList.Add(plant);
-		return plant;
+		if(treeScript.pollen >= 50) {
+			treeScript.pollen -= 50;
+			var plant = Instantiate(circlePlant, position, Quaternion.identity) as GameObject;
+			plantList.Add(plant);
+			return plant;
+		}
+		return null;
 	}
 	
 	public GameObject AddInsect(Vector3 position) {
