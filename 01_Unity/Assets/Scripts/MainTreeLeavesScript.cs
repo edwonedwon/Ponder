@@ -9,6 +9,7 @@ public class MainTreeLeavesScript : MonoBehaviour {
 
 	void Start () {
 		attractionPower = 10;
+		pollen = 100;
 	}
 	
 	void Update () {
@@ -16,8 +17,10 @@ public class MainTreeLeavesScript : MonoBehaviour {
 	}
 	
 	void OnGUI() {
-		GUI.Label (new Rect(10, 10, 100, 20), "Pollen: " + Mathf.RoundToInt(pollen));
-		GUI.Label (new Rect(10, 30, 100, 20), "Plants: " + GameObject.FindGameObjectsWithTag("plant").Length);
-		GUI.Label (new Rect(10, 50, 100, 20), "Insects: " + GameObject.FindGameObjectsWithTag("insect").Length);
+		string message = string.Format("Pollen: {0}\nPlants: {1}\nInsects: {2}", 
+			Mathf.RoundToInt(pollen),
+			GameObject.FindGameObjectsWithTag("plant").Length,
+			GameObject.FindGameObjectsWithTag("insect").Length);
+		GUI.Label (new Rect(10, 10, 100, 60), message);
 	}
 }
