@@ -3,8 +3,13 @@ using System.Collections;
 
 public class FingerGesturesManagerScript : MonoBehaviour {
 	
-	public GameObject circlePlant;
 	public GameObject insect;
+	
+	public GameLogicScript gameLogic;
+	
+	void Start() {
+		gameLogic = GameObject.Find("Game Logic").GetComponent<GameLogicScript>();
+	}
 	
 	void OnEnable () {
 		FingerGestures.OnFingerDown += OnFingerDown;
@@ -20,8 +25,8 @@ public class FingerGesturesManagerScript : MonoBehaviour {
 		Physics.Raycast(Camera.main.ScreenPointToRay(pos), out hit);
 		
 		if (hit.collider.tag == "island") {
-			Instantiate(circlePlant, hit.point, Quaternion.identity);
-			Instantiate(insect, hit.point, Quaternion.identity);
+			gameLogic.AddPlant(hit.point);
+			//Instantiate(insect, hit.point, Quaternion.identity);
 		}
 
 	}
