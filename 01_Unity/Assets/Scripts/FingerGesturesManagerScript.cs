@@ -17,7 +17,7 @@ public class FingerGesturesManagerScript : MonoBehaviour {
 		
 		RaycastHit hit;
 		Physics.Raycast(Camera.main.ScreenPointToRay(pos), out hit);
-		print(hit.point);
+		
 		if (hit.collider.tag == "island") {
 			Instantiate(circlePlant, hit.point, Quaternion.identity);
 		}
