@@ -4,6 +4,8 @@ using System.Linq;
 
 public class InsectPrefabScript : MonoBehaviour {
 	
+	private GameLogicScript gameLogic;
+	
 	private GameObject mainTreeLeaves;
 	private GameObject targetPlant;
 	
@@ -14,6 +16,8 @@ public class InsectPrefabScript : MonoBehaviour {
 	
 	// Use this for initialization
 	void Start () {
+		gameLogic = GameObject.Find("Game Logic").GetComponent<GameLogicScript>();
+		
 		targetPlant = mainTreeLeaves = GameObject.Find("Main Tree Leaves");
 		// get 'em moving randomly
 		rigidbody.AddForce(RandomForce(speed));
@@ -54,26 +58,28 @@ public class InsectPrefabScript : MonoBehaviour {
 	void OnTriggerEnter(Collider collider) {
 		// when an insect collides with its plant target...
 		if(collider.gameObject.Equals(targetPlant) && collider.gameObject.CompareTag("plant")) {
-			// transfer some pollen over
+			// transfer some pollen over, only as much as insect can carry
 			var script = collider.gameObject.GetComponent<CirclePlantPrefabScript>();
-			this.pollen += script.pollenTotal;
-			script.pollenTotal = 0;
+			float available = pollenCapacity - pollen;
+			float collected = Mathf.Min (script.pollenTotal, available);
+			this.pollen += collected;
+			script.pollenTotal -= collected;
 			print (string.Format ("BOOM hit my target! pollen {0}/{1}", pollen, pollenCapacity));
 			// and find a new best target
 			FindNewTarget();
-			script.IsTargeted = false;
 		}
 	}
 	
-	// finds the plant with the most pollen or the tree
+	// finds the closest untargeted plant or the tree
 	void FindNewTarget() {
 		GameObject[] plants = GameObject.FindGameObjectsWithTag("plant");
-		float maxPollen = -1;
+		float optimal = 10000;
 		GameObject bestTarget = null;
 		foreach(GameObject plant in plants) {
 			var script = plant.GetComponent<CirclePlantPrefabScript>();
-			if (!script.IsTargeted && script.pollenTotal >= maxPollen) {
-				maxPollen = script.pollenTotal;
+			var dist = Vector3.Distance(transform.position, plant.transform.position);
+			if (!script.IsTargeted && dist < optimal) {
+				optimal = dist;
 				bestTarget = plant;
 			}
 		}
@@ -84,8 +90,13 @@ public class InsectPrefabScript : MonoBehaviour {
 	
 	// changes the target and sets insect color
 	void ChangeTarget(GameObject target) {
+		// clear old target and set new one
+		if(targetPlant.CompareTag("plant")) {
+			targetPlant.GetComponent<CirclePlantPrefabScript>().IsTargeted = false;
+		}
 		targetPlant = target;
-		
+		// then colorize insect based on target
+		// white=null, green=plant, yellow=tree+full, orange=tree+unfull, red=tree+empty
 		if(targetPlant == null) 
 			renderer.material.color = Color.white;
 		else if(targetPlant.CompareTag("plant")) {

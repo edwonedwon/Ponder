@@ -27,5 +27,7 @@ public class CirclePlantPrefabScript : MonoBehaviour {
 			pollenTotal += pollenSpeed;
 		transform.localScale = Vector3.one / 2 + new Vector3 (pollenTotal, pollenTotal, pollenTotal) / 50;
 		
+		// change material color when targeted
+		renderer.material.color = targeted ? Color.green : Color.gray;
 	}
 }
