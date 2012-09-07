@@ -34,7 +34,8 @@ public class InsectPrefabScript : MonoBehaviour {
 		
 		// if insect is full and not headed home, send it home!
 		if(pollen >= pollenCapacity && targetPlant != mainTreeLeaves) {
-			Comment ("I am heading for the tree!");
+
+//			print("I am heading for the tree!");
 			ChangeTarget(mainTreeLeaves);
 		}
 		
@@ -81,7 +82,7 @@ public class InsectPrefabScript : MonoBehaviour {
 			float collected = Mathf.Min (script.pollen, available);
 			this.pollen += collected;
 			script.pollen -= collected;
-			Comment ("BOOM hit my target! pollen {0}/{1}", pollen, pollenCapacity);
+//			print (string.Format ("BOOM hit my target! pollen {0}/{1}", pollen, pollenCapacity));
 			// and find a new best target
 			FindNewTarget();
 		}
@@ -101,6 +102,7 @@ public class InsectPrefabScript : MonoBehaviour {
 			}
 		}
 		ChangeTarget(bestTarget ?? mainTreeLeaves);
+//		print ("New target: " + targetPlant);
 	}
 	
 	// changes the target and sets insect color
