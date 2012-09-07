@@ -13,6 +13,7 @@ public class InsectPrefabScript : MonoBehaviour {
 	
 	private float pollen = 0;
 	public float pollenCapacity = 1;
+	public float collectionSpeed;
 	
 	// Use this for initialization
 	void Start () {
@@ -33,17 +34,17 @@ public class InsectPrefabScript : MonoBehaviour {
 		
 		// if insect is full and not headed home, send it home!
 		if(pollen >= pollenCapacity && targetPlant != mainTreeLeaves) {
-			print("I am heading for the tree!");
+			Comment ("I am heading for the tree!");
 			ChangeTarget(mainTreeLeaves);
 		}
 		
 		// move towards target
-		AddForceToObject(targetPlant);
+		AddForceTowardObject(targetPlant);
 	}
 	
 	void OnCollisionEnter(Collision collision) {
-		// ignore collisions with other insects and plants
-		if(collision.gameObject.CompareTag("insect") || collision.gameObject.CompareTag("plant")) {
+		// ignore collisions with other insects
+		if(collision.gameObject.CompareTag("insect")) {
 			Physics.IgnoreCollision(this.collider, collision.collider, true);
 		}
 		
@@ -55,16 +56,32 @@ public class InsectPrefabScript : MonoBehaviour {
 		}
 	}
 	
+	void OnCollisionStay(Collision collision) {
+		// transfer some pollen when an insect collides with its plant target
+		if(collision.gameObject.Equals(targetPlant) && collision.gameObject.CompareTag("plant")) {
+			var script = collision.gameObject.GetComponent<CirclePlantPrefabScript>();
+			// collect a small quantity of pollen each time until the plant is empty
+			if(script.pollen > 0) {
+				this.pollen += Mathf.Min (collectionSpeed, script.pollen);
+				script.pollen -= collectionSpeed;
+			} else {
+				// when the plant is empty, find a new target
+				FindNewTarget(); 
+			}
+			Comment ("BOOM hit my target! pollen {0}/{1}", pollen, pollenCapacity);
+		}
+	}
+	
 	void OnTriggerEnter(Collider collider) {
 		// when an insect collides with its plant target...
 		if(collider.gameObject.Equals(targetPlant) && collider.gameObject.CompareTag("plant")) {
 			// transfer some pollen over, only as much as insect can carry
 			var script = collider.gameObject.GetComponent<CirclePlantPrefabScript>();
 			float available = pollenCapacity - pollen;
-			float collected = Mathf.Min (script.pollenTotal, available);
+			float collected = Mathf.Min (script.pollen, available);
 			this.pollen += collected;
-			script.pollenTotal -= collected;
-			print (string.Format ("BOOM hit my target! pollen {0}/{1}", pollen, pollenCapacity));
+			script.pollen -= collected;
+			Comment ("BOOM hit my target! pollen {0}/{1}", pollen, pollenCapacity);
 			// and find a new best target
 			FindNewTarget();
 		}
@@ -83,9 +100,7 @@ public class InsectPrefabScript : MonoBehaviour {
 				bestTarget = plant;
 			}
 		}
-		
 		ChangeTarget(bestTarget ?? mainTreeLeaves);
-		print ("New target: " + targetPlant);
 	}
 	
 	// changes the target and sets insect color
@@ -94,11 +109,15 @@ public class InsectPrefabScript : MonoBehaviour {
 		if(targetPlant.CompareTag("plant")) {
 			targetPlant.GetComponent<CirclePlantPrefabScript>().IsTargeted = false;
 		}
+		
+		if(target != targetPlant)
+			Comment ("New target: {0}", target);
 		targetPlant = target;
 		// then colorize insect based on target
 		// white=null, green=plant, yellow=tree+full, orange=tree+unfull, red=tree+empty
-		if(targetPlant == null) 
+		if(targetPlant == null) {
 			renderer.material.color = Color.white;
+		}
 		else if(targetPlant.CompareTag("plant")) {
 			renderer.material.color = Color.green;
 			targetPlant.GetComponent<CirclePlantPrefabScript>().IsTargeted = true;
@@ -111,7 +130,7 @@ public class InsectPrefabScript : MonoBehaviour {
 		}
 	}
 		
-	void AddForceToObject(GameObject target) {
+	void AddForceTowardObject(GameObject target) {
 		float magnitude = 1 / Vector3.Distance (transform.position, target.transform.position);
 		rigidbody.AddForce(magnitude * (target.transform.position - transform.position));
 	}
@@ -124,5 +143,9 @@ public class InsectPrefabScript : MonoBehaviour {
 		Vector3 vec = new Vector3(RandomMovement(), RandomMovement(), RandomMovement());
 		vec.Normalize();
 		return vec * magnitude;
+	}
+	
+	void Comment(string format, params object[] args) {
+		print (this.name + ": " + string.Format(format, args));
 	}
 }
