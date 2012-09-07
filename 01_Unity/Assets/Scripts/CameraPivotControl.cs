@@ -5,8 +5,8 @@ public class CameraPivotControl : MonoBehaviour {
 	
 	private	float rotateSpeed = -1; 
 	private float zoomSpeed = 0.3f;
-	private float minZoom = 3.5f;
-	private float maxZoom = 25;
+	private float minZoom = 10f;
+	private float maxZoom = 35f;
 	
 	private Vector3 defaultCameraPosition;
 	private Transform cameraTransform;
