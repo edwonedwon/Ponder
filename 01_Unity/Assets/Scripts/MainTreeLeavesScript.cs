@@ -3,7 +3,7 @@ using System.Collections;
 
 public class MainTreeLeavesScript : MonoBehaviour {
 	
-	private int attractionPower;
+	public int attractionPower;
 
 	void Start () {
 		attractionPower = 10;
