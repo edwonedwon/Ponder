@@ -1,5 +1,6 @@
 using UnityEngine;
 using System.Collections;
+using System.Linq;
 
 public class InsectPrefabScript : MonoBehaviour {
 	
@@ -8,24 +9,32 @@ public class InsectPrefabScript : MonoBehaviour {
 	
 	public float speed = 50;
 	
-	private int pollen = 0;
-	private int pollenCapacity = 20;
+	private float pollen = 0;
+	public float pollenCapacity = 1;
 	
 	// Use this for initialization
 	void Start () {
-		mainTreeLeaves = GameObject.Find("Main Tree Leaves"); //.GetComponent<MainTreeLeavesScript>();
+		targetPlant = mainTreeLeaves = GameObject.Find("Main Tree Leaves");
 		// get 'em moving randomly
 		rigidbody.AddForce(RandomForce(speed));
+		
+		rigidbody.maxAngularVelocity = 5f;
 	}
 	
 	// Update is called once per frame
 	void FixedUpdate () {
-		// every plant and main tree attracts the insects
-		GameObject[] plants = GameObject.FindGameObjectsWithTag("plant");
-		foreach(GameObject plant in plants) {
-			AddForceToObject(plant);
+		// if insect has no target or at tree with no pollen then find new target!
+		if (targetPlant == null || (targetPlant == mainTreeLeaves && pollen == 0))
+			FindNewTarget();
+		
+		// if insect is full and not headed home, send it home!
+		if(pollen >= pollenCapacity && targetPlant != mainTreeLeaves) {
+			print("I am heading for the tree!");
+			ChangeTarget(mainTreeLeaves);
 		}
-		AddForceToObject(mainTreeLeaves);
+		
+		// move towards target
+		AddForceToObject(targetPlant);
 	}
 	
 	void OnCollisionEnter(Collision collision) {
@@ -33,8 +42,64 @@ public class InsectPrefabScript : MonoBehaviour {
 		if(collision.gameObject.CompareTag("insect") || collision.gameObject.CompareTag("plant")) {
 			Physics.IgnoreCollision(this.collider, collision.collider, true);
 		}
+		
+		// if the insect hits the tree then transfer pollen and find a new target
+		if(collision.gameObject.CompareTag("tree")) {
+			collision.gameObject.GetComponent<MainTreeLeavesScript>().pollen += this.pollen;
+			this.pollen = 0;
+			FindNewTarget();
+		}
 	}
 	
+	void OnTriggerEnter(Collider collider) {
+		// when an insect collides with its plant target...
+		if(collider.gameObject.Equals(targetPlant) && collider.gameObject.CompareTag("plant")) {
+			// transfer some pollen over
+			var script = collider.gameObject.GetComponent<CirclePlantPrefabScript>();
+			this.pollen += script.pollenTotal;
+			script.pollenTotal = 0;
+			print (string.Format ("BOOM hit my target! pollen {0}/{1}", pollen, pollenCapacity));
+			// and find a new best target
+			FindNewTarget();
+			script.IsTargeted = false;
+		}
+	}
+	
+	// finds the plant with the most pollen or the tree
+	void FindNewTarget() {
+		GameObject[] plants = GameObject.FindGameObjectsWithTag("plant");
+		float maxPollen = -1;
+		GameObject bestTarget = null;
+		foreach(GameObject plant in plants) {
+			var script = plant.GetComponent<CirclePlantPrefabScript>();
+			if (!script.IsTargeted && script.pollenTotal >= maxPollen) {
+				maxPollen = script.pollenTotal;
+				bestTarget = plant;
+			}
+		}
+		
+		ChangeTarget(bestTarget ?? mainTreeLeaves);
+		print ("New target: " + targetPlant);
+	}
+	
+	// changes the target and sets insect color
+	void ChangeTarget(GameObject target) {
+		targetPlant = target;
+		
+		if(targetPlant == null) 
+			renderer.material.color = Color.white;
+		else if(targetPlant.CompareTag("plant")) {
+			renderer.material.color = Color.green;
+			targetPlant.GetComponent<CirclePlantPrefabScript>().IsTargeted = true;
+		}
+		else if(targetPlant.CompareTag("tree")) {
+			if(pollen > 0) {
+				renderer.material.color = pollen < pollenCapacity ? Color.Lerp(Color.red, Color.yellow, 0.5f) : Color.yellow;
+			}
+			else renderer.material.color = Color.red;
+		}
+	}
+		
 	void AddForceToObject(GameObject target) {
 		float magnitude = 1 / Vector3.Distance (transform.position, target.transform.position);
 		rigidbody.AddForce(magnitude * (target.transform.position - transform.position));

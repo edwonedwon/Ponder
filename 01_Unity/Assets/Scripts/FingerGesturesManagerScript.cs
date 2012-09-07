@@ -4,6 +4,7 @@ using System.Collections;
 public class FingerGesturesManagerScript : MonoBehaviour {
 	
 	public GameObject circlePlant;
+	public GameObject insect;
 	
 	void OnEnable () {
 		FingerGestures.OnFingerDown += OnFingerDown;
@@ -20,6 +21,7 @@ public class FingerGesturesManagerScript : MonoBehaviour {
 		
 		if (hit.collider.tag == "island") {
 			Instantiate(circlePlant, hit.point, Quaternion.identity);
+			Instantiate(insect, hit.point, Quaternion.identity);
 		}
 
 	}
