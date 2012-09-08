@@ -147,6 +147,6 @@ public class InsectPrefabScript : MonoBehaviour {
 	}
 	
 	void Comment(string format, params object[] args) {
-		print (this.name + ": " + string.Format(format, args));
+//		print (this.name + ": " + string.Format(format, args));
 	}
 }
