@@ -90,17 +90,16 @@ public class InsectPrefabScript : MonoBehaviour {
 	
 	// finds the closest untargeted plant or the tree
 	void FindNewTarget() {
-		GameObject[] plants = GameObject.FindGameObjectsWithTag("plant");
-		float optimal = 10000;
-		GameObject bestTarget = null;
-		foreach(GameObject plant in plants) {
-			var script = plant.GetComponent<CirclePlantPrefabScript>();
-			var dist = Vector3.Distance(transform.position, plant.transform.position);
-			if (!script.IsTargeted && dist < optimal) {
-				optimal = dist;
-				bestTarget = plant;
-			}
-		}
+		var plants = GameObject.FindGameObjectsWithTag("plant").Where(o => !o.GetComponent<CirclePlantPrefabScript>().IsTargeted);
+		GameObject bestTarget = plants.FindClosest(transform.position);
+//		foreach(GameObject plant in plants) {
+//			var script = plant.GetComponent<CirclePlantPrefabScript>();
+//			var dist = Vector3.Distance(transform.position, plant.transform.position);
+//			if (!script.IsTargeted && dist < optimal) {
+//				optimal = dist;
+//				bestTarget = plant;
+//			}
+//		}
 		ChangeTarget(bestTarget ?? mainTreeLeaves);
 //		print ("New target: " + targetPlant);
 	}
