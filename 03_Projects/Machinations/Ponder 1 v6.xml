@@ -1,0 +1,36 @@
+<graph version="v4.03" name="" author="" interval="0.1" timeMode="asynchronous" distributionMode="fixed speed" speed="100" actions="1" dice="D6" skill="" strategy="" multiplayer="" width="600" height="560" numberOfRuns="100" visibleRuns="25" colorCoding="0">
+  <connection type="State Connection" start="28" end="20" label="+0.1" position="0.5" color="Black" thickness="2"/>
+  <connection type="State Connection" start="28" end="2" label="*" position="0.5" color="Green" thickness="2"/>
+  <node symbol="Source" x="420" y="140" color="Blue" caption="Insect Source" thickness="2" captionPos="0.25" activationMode="passive" pullMode="pull any" actions="1" resourceColor="Blue"/>
+  <connection type="Resource Connection" start="22" end="28" label="1" position="-0.5" color="Green" thickness="2"/>
+  <connection type="State Connection" start="28" end="9" label="+1/5" position="0.64" color="Black" thickness="2"/>
+  <connection type="Resource Connection" start="2" end="14" label="" position="0.5" color="Blue" thickness="2"/>
+  <connection type="Resource Connection" start="24" end="22" label="1" position="0.5" color="Orange" thickness="2"/>
+  <connection type="Resource Connection" start="23" end="26" label="1" position="0.5" color="Brown" thickness="2"/>
+  <node symbol="Source" x="139" y="29" color="Violet" caption="Lichen Source" thickness="2" captionPos="0.25" activationMode="automatic" pullMode="pull any" actions="1" resourceColor="Black"/>
+  <connection type="Resource Connection" start="8" end="16" label="1" position="-0.5" color="Violet" thickness="2"/>
+  <connection type="Resource Connection" start="15" end="23" label="5" position="0.5" color="Violet" thickness="2"/>
+  <connection type="State Connection" start="13" end="15" label="*" position="0.5" color="Blue" thickness="2"/>
+  <connection type="State Connection" start="14" end="13" label=">0" position="0.5" color="Blue" thickness="2"/>
+  <node symbol="Gate" x="179" y="190" color="Blue" caption="" thickness="2" captionPos="0.25" activationMode="automatic" pullMode="pull any" actions="1" gateType="deterministic"/>
+  <node symbol="Pool" x="293" y="145" color="Blue" caption="Insects" thickness="2" captionPos="0.25" activationMode="passive" pullMode="pull any" actions="1" resourceColor="Blue" startingResources="0" maxResources="-1"/>
+  <node symbol="Pool" x="70" y="228" color="Violet" caption="Dead Lichen" thickness="2" captionPos="0.25" activationMode="passive" pullMode="pull any" actions="1" resourceColor="Black" startingResources="0" maxResources="-1"/>
+  <node symbol="Pool" x="80" y="99" color="Violet" caption="Lichen" thickness="2" captionPos="0.25" activationMode="passive" pullMode="push any" actions="1" resourceColor="Black" startingResources="0" maxResources="-1"/>
+  <node symbol="TextLabel" x="37" y="163" color="Black" caption="Insect AP"/>
+  <connection type="State Connection" start="14" end="19" label="+1/5" position="0.5" color="Blue" thickness="2"/>
+  <connection type="Resource Connection" start="16" end="15" label="1" position="-0.42" color="Violet" thickness="2"/>
+  <connection type="Resource Connection" start="21" end="24" label="1" position="-0.63" color="Orange" thickness="2"/>
+  <node symbol="Source" x="231" y="203" color="Black" caption="Pollen Source" thickness="2" captionPos="0.25" activationMode="automatic" pullMode="pull any" actions="1" resourceColor="Black"/>
+  <node symbol="Converter" x="320" y="299" color="Black" caption="Buy Plant" thickness="2" captionPos="0.25" activationMode="automatic" pullMode="pull all" actions="1" resourceColor="Black"/>
+  <node symbol="Converter" x="80" y="316" color="Brown" caption="" thickness="2" captionPos="0.25" activationMode="automatic" pullMode="pull all" actions="1" resourceColor="Brown"/>
+  <node symbol="Pool" x="226" y="304" color="Orange" caption="Pollen" thickness="2" captionPos="0.25" activationMode="passive" pullMode="pull any" actions="1" resourceColor="Green" startingResources="0" maxResources="-1"/>
+  <connection type="Resource Connection" start="26" end="27" label="10" position="0.5" color="Brown" thickness="2"/>
+  <node symbol="Pool" x="153" y="311" color="Brown" caption="Scum" thickness="2" captionPos="0.25" activationMode="automatic" pullMode="pull all" actions="1" resourceColor="Black" startingResources="0" maxResources="-1"/>
+  <node symbol="Converter" x="207" y="403" color="Brown" caption="" thickness="2" captionPos="0.25" activationMode="interactive" pullMode="pull all" actions="1" resourceColor="Black"/>
+  <node symbol="Pool" x="430" y="305" color="Green" caption="Plants" thickness="2" captionPos="0" activationMode="passive" pullMode="push any" actions="1" resourceColor="Black" startingResources="0" maxResources="-1"/>
+  <node symbol="Pool" x="527" y="391" color="Lime" caption="Super Plants" thickness="2" captionPos="0.25" activationMode="passive" pullMode="pull any" actions="1" resourceColor="Black" startingResources="0" maxResources="-1"/>
+  <connection type="Resource Connection" start="28" end="32" label="" position="0.5" color="Green" thickness="2"/>
+  <connection type="Resource Connection" start="32" end="29" label="" position="0.5" color="Lime" thickness="2"/>
+  <node symbol="Converter" x="483" y="349" color="Lime" caption="" thickness="2" captionPos="0.25" activationMode="passive" pullMode="pull any" actions="1" resourceColor="Lime"/>
+  <connection type="State Connection" start="27" end="32" label="*" position="0.5" color="Brown" thickness="2"/>
+</graph>
