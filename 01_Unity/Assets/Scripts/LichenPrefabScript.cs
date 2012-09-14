@@ -11,6 +11,7 @@ public class LichenPrefabScript : MonoBehaviour {
 	float growCounter;
 	
 	bool reproducify = true;
+	bool doScale = true;
 	
 	Vector3 spawnDirection;
 	
@@ -32,11 +33,13 @@ public class LichenPrefabScript : MonoBehaviour {
 	void FixedUpdate () {
 		if(reproducify) {
 			growCounter += Time.deltaTime;
-			transform.localScale = new Vector3 (growCounter, growCounter, growCounter / 2) / growTime;
+			if(doScale)
+				transform.localScale = new Vector3 (growCounter, growCounter, growCounter / 2) / growTime;
 			// reproduce once per time period
 			if(growCounter > growTime) {
 				Reproduce();
 				growCounter = 0;
+				doScale = false;
 			}
 		}
 	}

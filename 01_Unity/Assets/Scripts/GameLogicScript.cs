@@ -7,6 +7,8 @@ public class GameLogicScript : MonoBehaviour {
 	public GameObject circlePlant;
 	public GameObject insect;
 	
+	public GameObject markedPlant;
+	
 	public int startInsects;
 	public int randPosRange;
 	private GameObject mainTreeLeaves;
@@ -47,6 +49,13 @@ public class GameLogicScript : MonoBehaviour {
 		
 		if(Input.GetKeyDown(KeyCode.Alpha1)) 
 			treeScript.pollen += 100;
+	}
+	
+	void OnGUI() {
+		if(markedPlant != null) {
+			var screenPos = Camera.main.WorldToScreenPoint(markedPlant.transform.position);
+			GUI.Label(new Rect(screenPos.x, Camera.main.pixelHeight - screenPos.y - 10, 20, 20), "*");
+		}
 	}
 	
 	public GameObject AddPlant(Vector3 position) {

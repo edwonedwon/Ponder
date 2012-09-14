@@ -9,6 +9,8 @@ public class CirclePlantPrefabScript : MonoBehaviour {
 	public float pollenSpeed;
 	public float pollen;
 	public float pollenCapacity = 5;
+	public float timeToDie;
+
 	
 	private bool targeted = false;
 	private float fallowTime;
@@ -18,10 +20,17 @@ public class CirclePlantPrefabScript : MonoBehaviour {
 		set { targeted = value; }
 	}
 	
+	private bool marked;
+	public bool Mark {
+		get { return marked; }
+		set { marked = true; }
+	}
+	
 	void Start () {
 		attractionPower = 10;
 	}
 	
+	Vector3 finalScale;
 	void FixedUpdate () {
 		// plant produces pollen over time, up to capacity, and grows larger
 		if(pollen <= pollenCapacity)
@@ -35,6 +44,14 @@ public class CirclePlantPrefabScript : MonoBehaviour {
 		// if the time gets large enough the plant will begin to die.
 		if(!IsTargeted && pollen >= pollenCapacity) {
 			fallowTime += Time.deltaTime;
+			if(fallowTime > timeToDie) {
+				renderer.material.color = Color.red;
+				transform.localScale = Vector3.Lerp(finalScale, Vector3.zero, (fallowTime - timeToDie) / timeToDie);
+			} else
+				finalScale = transform.localScale;
+			if(fallowTime > timeToDie * 2) {
+				Destroy(gameObject);
+			}
 		} else {
 			fallowTime = 0;
 		}

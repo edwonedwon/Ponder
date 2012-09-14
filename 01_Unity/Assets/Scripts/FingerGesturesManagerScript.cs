@@ -24,11 +24,16 @@ public class FingerGesturesManagerScript : MonoBehaviour {
 		RaycastHit hit;
 		Physics.Raycast(Camera.main.ScreenPointToRay(pos), out hit);
 		
-		if (hit.collider.tag == "island") {
+		if (hit.collider.CompareTag("island")) {
 			gameLogic.AddPlant(hit.point);
 			//Instantiate(insect, hit.point, Quaternion.identity);
 		}
-
+		if(hit.collider.CompareTag("plant")) {
+			if(hit.collider.gameObject.Equals(gameLogic.markedPlant))
+				gameLogic.markedPlant = null;
+			else
+				gameLogic.markedPlant = hit.collider.gameObject;
+		}
 	}
 			
 }
